@@ -393,7 +393,7 @@ export default function Page() {
               {/* Bottom Details */}
               <div className="flex justify-between items-center text-[10px] font-bold text-zinc-400 pt-3 border-t border-[#B9C7E8]/10">
                 <span className="flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#D1D067]" />
+                  {/* <span className="h-1.5 w-1.5 rounded-full bg-[#D1D067]" /> */}
                   Compound Assets
                 </span>
                 <span>Active Risk Protection</span>
@@ -404,7 +404,7 @@ export default function Page() {
 
         {/* ── PHILOSOPHY TRUST BAR (Flat, rounded-2xl, border-only, zero shadows) ── */}
         <section className="w-full">
-          <div className="bg-[#0D21A5] text-white py-6 px-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 border-l-8 border-[#D1D067]">
+          <div className="bg-[#0D21A5] text-white py-6 px-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6 ">
             <div className="space-y-1 text-center md:text-left">
               <span className="text-[9px] font-black uppercase text-[#B9C7E8] tracking-widest block">
                 Corporate philosophy
@@ -416,7 +416,6 @@ export default function Page() {
             </div>
             <div className="shrink-0 bg-white/10 px-4 py-2.5 rounded-full border border-white/10">
               <span className="text-[9.5px] font-black uppercase tracking-wider text-[#B9C7E8] flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-[#D1D067]" />
                 Disciplined & Insight-Driven
               </span>
             </div>
@@ -1232,15 +1231,21 @@ export default function Page() {
       <footer className="w-full bg-white border-t border-[#B9C7E8]/20 py-8">
         <div className="max-w-6xl mx-auto px-6 md:px-10 flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
           <div className="flex items-center gap-2">
-            <Logo showText={false} />
-            <div className="text-left leading-tight">
+            <Image
+              src="/logo.jpeg"
+              alt="HFS Consult Logo"
+              width={150}
+              height={150}
+              className="rounded-md object-contain"
+            />
+            {/* <div className="text-left leading-tight">
               <span className="block text-[11px] font-black text-[#0D21A5] tracking-tight uppercase">
                 HFS Consult Limited
               </span>
               <span className="block text-[8px] font-black text-zinc-400 uppercase tracking-widest">
                 Investing with Clarity & Confidence.
               </span>
-            </div>
+            </div> */}
           </div>
 
           <span className="text-[10px] font-bold text-zinc-400">

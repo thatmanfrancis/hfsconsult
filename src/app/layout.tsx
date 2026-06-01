@@ -11,7 +11,8 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   metadataBase: new URL("https://hfsconsult.us"),
   title: "HFS Consult — Investing with Clarity & Confidence",
-  description: "HFS Consult Limited delivers disciplined, insight-driven investment strategies across multiple asset classes for retail investors, High-Net-Worth Individuals (HNIs), and institutions.",
+  description:
+    "HFS Consult Limited delivers disciplined, insight-driven investment strategies across multiple asset classes for retail investors, High-Net-Worth Individuals (HNIs), and institutions.",
   keywords: [
     "HFS Consult",
     "HFS Consult Limited",
@@ -23,20 +24,27 @@ export const metadata: Metadata = {
     "real estate investment",
     "wealth building Africa",
     "Elizabeth O. Nwankwo",
-    "portfolio management Yaba"
+    "portfolio management Yaba",
   ],
+  icons: {
+    icon: "/logo.jpeg",
+    apple: "/logo.jpeg",
+  },
   openGraph: {
     title: "HFS Consult — Investing with Clarity & Confidence",
-    description: "Tailored investment advisory services delivering capital preservation and optimized returns.",
+    description:
+      "Tailored investment advisory services delivering capital preservation and optimized returns.",
     url: "https://hfsconsult.us",
     siteName: "HFS Consult",
     locale: "en_NG",
     type: "website",
+    images: "/logo.jpeg",
   },
   twitter: {
     card: "summary_large_image",
     title: "HFS Consult — Investing with Clarity & Confidence",
-    description: "Tailored investment advisory services delivering capital preservation and optimized returns.",
+    description:
+      "Tailored investment advisory services delivering capital preservation and optimized returns.",
   },
 };
 
@@ -58,10 +66,12 @@ export default function RootLayout({
       className={`${nunito.variable} h-full antialiased scroll-smooth`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-[#f7f9fd]" suppressHydrationWarning>
+      <body
+        className="min-h-full flex flex-col bg-[#f7f9fd]"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>
   );
 }
-
