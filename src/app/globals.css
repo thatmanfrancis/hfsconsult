@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f9fd;
+  --foreground: #090e29;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-nunito);
+
+  /* HFS Brand Palette */
+  --color-hfs-blue: #0D21A5;
+  --color-hfs-lavender: #B9C7E8;
+  --color-hfs-gold: #D1D067;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+}
