@@ -13,7 +13,9 @@
   /* HFS Brand Palette */
   --color-hfs-blue: #0D21A5;
   --color-hfs-lavender: #B9C7E8;
+  --color-hfs-periwinkle: #B9C7E8;
   --color-hfs-gold: #D1D067;
+  --color-hfs-citron: #D1D067;
 }
 
 body {

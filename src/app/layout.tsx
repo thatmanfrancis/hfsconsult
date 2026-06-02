@@ -9,7 +9,7 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://hfsconsult.us"),
+  metadataBase: new URL("https://hfsconsult.org"),
   title: "HFS Consult — Investing with Clarity & Confidence",
   description:
     "HFS Consult Limited delivers disciplined, insight-driven investment strategies across multiple asset classes for retail investors, High-Net-Worth Individuals (HNIs), and institutions.",
@@ -27,18 +27,18 @@ export const metadata: Metadata = {
     "portfolio management Yaba",
   ],
   icons: {
-    icon: "/logo.jpeg",
-    apple: "/logo.jpeg",
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
   openGraph: {
     title: "HFS Consult — Investing with Clarity & Confidence",
     description:
       "Tailored investment advisory services delivering capital preservation and optimized returns.",
-    url: "https://hfsconsult.us",
+    url: "https://hfsconsult.org",
     siteName: "HFS Consult",
     locale: "en_NG",
     type: "website",
-    images: "/logo.jpeg",
+    images: "/logo.png",
   },
   twitter: {
     card: "summary_large_image",

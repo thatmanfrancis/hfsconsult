@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Logo from "./components/Logo";
 import StrategyModal from "./components/StrategyModal";
 import Image from "next/image";
 
@@ -20,9 +19,15 @@ export default function Page() {
   const [formEmail, setFormEmail] = useState("");
   const [formMessage, setFormMessage] = useState("");
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  // Custom interactive chart highlights
-  const [hoveredBar, setHoveredBar] = useState<number | null>(null);
+  // Build email parts for use across all clients
+  const getEmailParts = () => {
+    const subject = "Investment Consultation Request — HFS Consult";
+    const body = `Hello HFS Consult,\n\nI would like to request an investment consultation.\n\nName: ${formName}\nEmail: ${formEmail}\n\nMessage:\n${formMessage}\n\n—\nSent via hfsconsult.org`;
+    return { subject, body };
+  };
+
 
   // Function to handle scroll to section
   const scrollToSection = (id: string) => {
@@ -40,18 +45,41 @@ export default function Page() {
     }
   };
 
-  // Form submission handler
+  // Form submission handler — shows email client picker
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formName && formEmail && formMessage) {
       setFormSubmitted(true);
-      setTimeout(() => {
-        setFormSubmitted(false);
-        setFormName("");
-        setFormEmail("");
-        setFormMessage("");
-      }, 5000);
     }
+  };
+
+  const handleFormReset = () => {
+    setFormSubmitted(false);
+    setCopied(false);
+    setFormName("");
+    setFormEmail("");
+    setFormMessage("");
+  };
+
+  const openGmail = () => {
+    const { subject, body } = getEmailParts();
+    const url = `https://mail.google.com/mail/?view=cm&to=info@hfsconsult.org&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(url, "_blank");
+  };
+
+  const openOutlook = () => {
+    const { subject, body } = getEmailParts();
+    const url = `https://outlook.live.com/mail/0/deeplink/compose?to=info@hfsconsult.org&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(url, "_blank");
+  };
+
+  const copyMessage = () => {
+    const { subject, body } = getEmailParts();
+    const text = `To: info@hfsconsult.org\nSubject: ${subject}\n\n${body}`;
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    });
   };
 
   return (
@@ -61,10 +89,11 @@ export default function Page() {
         <nav className="max-w-6xl mx-auto flex items-center justify-between px-6 h-16 w-full">
           {/* Brand Logo */}
           <Image
-            src="/logo.jpeg"
-            alt="HFS Consult Logo"
-            width={100}
-            height={100}
+            src="/logo.png"
+            alt="HFS Consult"
+            width={120}
+            height={52}
+            className="object-contain"
           />
 
           {/* Desktop Nav Links */}
@@ -211,193 +240,19 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Right Column: Custom Asset Compound Graph Card (Flat white, rounded-2xl, border-only, zero shadows) */}
+          {/* Right Column: Executive Photo */}
           <div className="w-full lg:w-[50%] flex items-center justify-center p-2">
-            <div className="w-full max-w-[450px] aspect-square relative rounded-2xl bg-white border border-[#B9C7E8]/35 p-6 flex flex-col justify-between overflow-hidden">
-              {/* Header inside Graphic Card */}
-              <div className="flex items-center justify-between border-b border-[#B9C7E8]/10 pb-4">
-                <div>
-                  <span className="text-[9px] font-black uppercase text-zinc-400 tracking-wider">
-                    Current Focus
-                  </span>
-                  <span className="block text-xs font-bold text-[#0D21A5]">
-                    Capital Preservation
-                  </span>
-                </div>
-                <div className="text-right">
-                  <span className="text-[9px] font-black uppercase text-[#D1D067] tracking-wider bg-[#D1D067]/10 px-2 py-0.5 rounded-full">
-                    Target Yield
-                  </span>
-                  <span className="block text-xs font-bold text-zinc-800">
-                    Optimal & Compounded
-                  </span>
-                </div>
-              </div>
+            <div className="w-full max-w-[450px] aspect-square relative rounded-2xl overflow-hidden border border-[#B9C7E8]/35">
+              <Image
+                src="/woman.jpg"
+                alt="Elizabeth O. Nwankwo — Managing Partner, HFS Consult"
+                fill
+                className="object-cover object-center"
+                priority
+              />
+              {/* Bottom overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0D21A5]/75 via-transparent to-transparent" />
 
-              {/* Main SVG Vector Graphic */}
-              <div className="flex-1 flex items-center justify-center py-4">
-                <svg
-                  width="100%"
-                  height="100%"
-                  viewBox="0 0 320 220"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="max-h-[160px]"
-                >
-                  {/* Grid lines */}
-                  <line
-                    x1="20"
-                    y1="170"
-                    x2="300"
-                    y2="170"
-                    stroke="#B9C7E8"
-                    strokeWidth="1"
-                    strokeDasharray="3 3"
-                    opacity="0.4"
-                  />
-                  <line
-                    x1="20"
-                    y1="120"
-                    x2="300"
-                    y2="120"
-                    stroke="#B9C7E8"
-                    strokeWidth="1"
-                    strokeDasharray="3 3"
-                    opacity="0.2"
-                  />
-
-                  {/* Asset growth vector path */}
-                  <path
-                    d="M 20 170 Q 100 150, 180 90 T 300 20"
-                    stroke="#B9C7E8"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    opacity="0.5"
-                  />
-                  <path
-                    d="M 20 170 Q 100 150, 180 90 T 300 20"
-                    stroke="#0D21A5"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeDasharray="8 6"
-                  />
-
-                  {/* Wave support line */}
-                  <path
-                    d="M 10 180 C 80 195, 240 195, 310 180 C 270 172, 50 172, 10 180 Z"
-                    fill="#B9C7E8"
-                    opacity="0.4"
-                  />
-                  <path
-                    d="M 25 182 C 100 197, 220 197, 295 182 C 250 176, 70 176, 25 182 Z"
-                    fill="#0D21A5"
-                  />
-
-                  {/* Rising Sailboat Bars */}
-                  {/* Bar 1 */}
-                  <g
-                    className="cursor-pointer group"
-                    onMouseEnter={() => setHoveredBar(1)}
-                    onMouseLeave={() => setHoveredBar(null)}
-                  >
-                    <rect
-                      x="60"
-                      y="125"
-                      width="18"
-                      height="50"
-                      rx="4"
-                      fill={hoveredBar === 1 ? "#0D21A5" : "#D1D067"}
-                      className="transition-colors duration-300"
-                    />
-                    <text
-                      x="69"
-                      y="115"
-                      fill="#0D21A5"
-                      fontSize="9"
-                      fontWeight="bold"
-                      textAnchor="middle"
-                      className={`transition-opacity duration-300 ${hoveredBar === 1 ? "opacity-100" : "opacity-0"}`}
-                    >
-                      CP
-                    </text>
-                  </g>
-
-                  {/* Bar 2 */}
-                  <g
-                    className="cursor-pointer group"
-                    onMouseEnter={() => setHoveredBar(2)}
-                    onMouseLeave={() => setHoveredBar(null)}
-                  >
-                    <rect
-                      x="92"
-                      y="90"
-                      width="18"
-                      height="85"
-                      rx="4"
-                      fill={hoveredBar === 2 ? "#0D21A5" : "#B9C7E8"}
-                      className="transition-colors duration-300"
-                    />
-                    <text
-                      x="101"
-                      y="80"
-                      fill="#0D21A5"
-                      fontSize="9"
-                      fontWeight="bold"
-                      textAnchor="middle"
-                      className={`transition-opacity duration-300 ${hoveredBar === 2 ? "opacity-100" : "opacity-0"}`}
-                    >
-                      Bonds
-                    </text>
-                  </g>
-
-                  {/* Bar 3 */}
-                  <g
-                    className="cursor-pointer group"
-                    onMouseEnter={() => setHoveredBar(3)}
-                    onMouseLeave={() => setHoveredBar(null)}
-                  >
-                    <rect
-                      x="124"
-                      y="50"
-                      width="18"
-                      height="125"
-                      rx="4"
-                      fill={hoveredBar === 3 ? "#D1D067" : "#6D85B3"}
-                      className="transition-colors duration-300"
-                    />
-                    <text
-                      x="133"
-                      y="40"
-                      fill="#0D21A5"
-                      fontSize="9"
-                      fontWeight="bold"
-                      textAnchor="middle"
-                      className={`transition-opacity duration-300 ${hoveredBar === 3 ? "opacity-100" : "opacity-0"}`}
-                    >
-                      T-Bills
-                    </text>
-                  </g>
-
-                  {/* Main wind Sail (Deep Navy) */}
-                  <path
-                    d="M 160 30 C 160 30, 215 70, 205 165 C 165 170, 145 130, 160 30 Z"
-                    fill="#0D21A5"
-                    className="cursor-pointer hover:fill-[#0D21A5]/80 transition-colors"
-                  />
-
-                  {/* Glowing indicator */}
-                  <circle cx="300" cy="20" r="5" fill="#D1D067" />
-                </svg>
-              </div>
-
-              {/* Bottom Details */}
-              <div className="flex justify-between items-center text-[10px] font-bold text-zinc-400 pt-3 border-t border-[#B9C7E8]/10">
-                <span className="flex items-center gap-1.5">
-                  {/* <span className="h-1.5 w-1.5 rounded-full bg-[#D1D067]" /> */}
-                  Compound Assets
-                </span>
-                <span>Active Risk Protection</span>
-              </div>
             </div>
           </div>
         </section>
@@ -846,11 +701,9 @@ export default function Page() {
             {/* Vision Card */}
             <div className="bg-[#0D21A5] text-white p-8 rounded-2xl relative overflow-hidden border border-[#B9C7E8]/25 flex flex-col justify-between min-h-[260px]">
               <div className="space-y-4 z-10 relative">
-                <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-[#B9C7E8]">
-                    Our Vision
-                  </span>
-                </div>
+                <span className="text-[9px] font-black uppercase tracking-widest text-[#B9C7E8]">
+                  Our Vision
+                </span>
                 <h3 className="text-2xl font-black text-[#D1D067] tracking-tight">
                   A Trusted Wealth Catalyst
                 </h3>
@@ -864,23 +717,27 @@ export default function Page() {
             </div>
 
             {/* Mission Card */}
-            <div className="bg-white p-8 rounded-2xl relative overflow-hidden border border-[#B9C7E8]/25 flex flex-col justify-between min-h-[260px]">
+            <div className="bg-[#B9C7E8]/15 p-8 rounded-2xl relative overflow-hidden flex flex-col justify-between min-h-[260px]">
               <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 bg-[#0D21A5]/5 border border-[#0D21A5]/10 px-4 py-1.5 rounded-full">
-                  <span className="text-[9.5px] font-black uppercase tracking-widest text-zinc-500">
-                    Our Mission
-                  </span>
-                </div>
-                <h3 className="text-2xl font-black text-[#0D21A5] tracking-tight">
+                <span className="text-[9.5px] font-black uppercase tracking-widest text-[#B9C7E8]">
+                  Our Mission
+                </span>
+                <h3 className="text-2xl font-black tracking-tight text-[#0D21A5]">
                   Disciplined Asset Strategies
                 </h3>
               </div>
 
-              <p className="text-sm text-zinc-500 leading-relaxed font-semibold mt-4">
+              <p className="text-sm leading-relaxed font-semibold mt-4 text-zinc-600">
                 &ldquo;To deliver disciplined, insight-driven investment
                 strategies that preserve capital, optimize returns, and make
                 wealth-building accessible to all.&rdquo;
               </p>
+
+              <div className="mt-6 flex items-center gap-2">
+                <span className="h-1.5 w-8 rounded-full bg-[#D1D067]" />
+                <span className="h-1.5 w-4 rounded-full bg-[#B9C7E8]" />
+                <span className="h-1.5 w-2 rounded-full bg-[#B9C7E8]/50" />
+              </div>
             </div>
           </div>
         </section>
@@ -889,45 +746,17 @@ export default function Page() {
         <section id="managing-partner" className="py-6 text-left">
           <div className="bg-white rounded-2xl border border-[#B9C7E8]/20 p-8 sm:p-10 relative overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Left: Silhouette Logo Card */}
+              {/* Left: CEO Photo */}
               <div className="lg:col-span-5 flex flex-col items-center">
-                <div className="relative w-60 h-60 rounded-2xl bg-gradient-to-tr from-[#0D21A5] via-[#B9C7E8] to-[#D1D067] p-1 shadow-none overflow-hidden group">
-                  {/* Decorative background sails */}
-                  <div className="absolute inset-0 bg-[#0D21A5] flex items-center justify-center text-white">
-                    <svg
-                      width="120"
-                      height="120"
-                      viewBox="0 0 100 100"
-                      fill="none"
-                      className="opacity-15"
-                    >
-                      <path
-                        d="M15 78 C 30 84, 70 84, 85 78 C 65 72, 35 72, 15 78 Z"
-                        fill="#B9C7E8"
-                      />
-                      <rect
-                        x="24"
-                        y="56"
-                        width="8"
-                        height="18"
-                        fill="#D1D067"
-                      />
-                      <rect
-                        x="36"
-                        y="42"
-                        width="8"
-                        height="32"
-                        fill="#B9C7E8"
-                      />
-                      <path
-                        d="M62 18 C 62 18, 86 42, 80 72 C 60 74, 52 56, 62 18 Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </div>
-                  {/* Partner badge title */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-end p-6 bg-gradient-to-t from-black/60 to-transparent">
-                    <span className="text-white text-base font-black tracking-tight leading-none">
+                <div className="relative w-60 h-72 rounded-2xl overflow-hidden border border-[#B9C7E8]/30">
+                  <Image
+                    src="/ceo.jpeg"
+                    alt="Elizabeth O. Nwankwo — Managing Partner, HFS Consult"
+                    fill
+                    className="object-cover object-top"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-end p-4 bg-gradient-to-t from-black/60 to-transparent">
+                    <span className="text-white text-sm font-black tracking-tight leading-none">
                       Elizabeth O. Nwankwo
                     </span>
                     <span className="text-[#D1D067] text-[9px] font-black uppercase tracking-widest mt-1">
@@ -953,12 +782,10 @@ export default function Page() {
 
                 <div className="text-zinc-600 text-sm leading-relaxed font-semibold space-y-4">
                   <p>
-                    Under Elizabeth&apos;s strategic leadership, HFS Consult
-                    operates on a rigid, client-centric framework designed to
-                    yield resilient investment strategies. Elizabeth and the
-                    team focus on navigating capital preservation goals for HNIs
-                    and retail partners across sub-Saharan corporate and federal
-                    debt markets.
+                    A visionary with over a decade of cross-disciplinary expertise, Elizabeth strategically bridges human capital and wealth management, transforming people&apos;s potential into sustainable value. Under her strategic leadership, HFS Consult operates on a rigid, client-centric framework designed to yield resilient investment strategies.
+                  </p>
+                  <p>
+                    Elizabeth and the team focus on navigating capital preservation goals for HNIs and retail partners across sub-Saharan corporate and federal debt markets.
                   </p>
                   <blockquote className="pl-4 text-xs italic font-bold text-zinc-700 bg-[#D1D067]/10 p-3 rounded-xl">
                     &ldquo;Our commitment is to guide our clients towards
@@ -970,7 +797,7 @@ export default function Page() {
                 {/* Direct hooks */}
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <a
-                    href="mailto:info@hfsconsult.us"
+                    href="mailto:info@hfsconsult.org"
                     className="rounded-full bg-[#0D21A5] hover:bg-[#0D21A5]/85 text-white font-bold text-xs px-6 py-3.5 flex items-center gap-2 transition-colors cursor-pointer"
                   >
                     <svg
@@ -1020,17 +847,64 @@ export default function Page() {
               </p>
 
               {formSubmitted ? (
-                <div className="bg-[#D1D067]/15 p-6 rounded-xl border border-[#D1D067]/40 text-center space-y-2 animate-scale-up">
-                  <div className="h-9 w-9 bg-[#D1D067] text-white flex items-center justify-center rounded-full mx-auto font-black text-sm">
-                    ✓
+                <div className="space-y-4">
+                  <div className="bg-[#0D21A5]/5 rounded-xl border border-[#B9C7E8]/40 p-4 text-center">
+                    <p className="text-xs font-black text-[#0D21A5] mb-0.5">Message ready to send</p>
+                    <p className="text-[10px] text-zinc-400 font-semibold">Choose how you&apos;d like to send it</p>
                   </div>
-                  <h4 className="font-extrabold text-[#0D21A5] text-sm">
-                    Request Received Successfully
-                  </h4>
-                  <p className="text-xs text-zinc-500 font-semibold">
-                    Thank you. Managing Partner Elizabeth Nwankwo will review
-                    your parameters shortly.
-                  </p>
+
+                  {/* Gmail */}
+                  <button
+                    onClick={openGmail}
+                    className="w-full flex items-center gap-4 bg-white border border-zinc-100 hover:border-[#0D21A5]/30 rounded-xl px-4 py-3.5 transition-colors group cursor-pointer"
+                  >
+                    <span className="h-9 w-9 rounded-lg bg-[#EA4335]/10 flex items-center justify-center shrink-0 text-base">
+                      G
+                    </span>
+                    <div className="text-left">
+                      <span className="block text-xs font-black text-zinc-800">Open in Gmail</span>
+                      <span className="block text-[10px] text-zinc-400 font-semibold">Opens Gmail in a new tab, pre-filled</span>
+                    </div>
+                    <svg className="ml-auto text-zinc-300 group-hover:text-[#0D21A5] transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  </button>
+
+                  {/* Outlook */}
+                  <button
+                    onClick={openOutlook}
+                    className="w-full flex items-center gap-4 bg-white border border-zinc-100 hover:border-[#0D21A5]/30 rounded-xl px-4 py-3.5 transition-colors group cursor-pointer"
+                  >
+                    <span className="h-9 w-9 rounded-lg bg-[#0078D4]/10 flex items-center justify-center shrink-0 text-[10px] font-black text-[#0078D4]">
+                      OL
+                    </span>
+                    <div className="text-left">
+                      <span className="block text-xs font-black text-zinc-800">Open in Outlook</span>
+                      <span className="block text-[10px] text-zinc-400 font-semibold">Opens Outlook Web in a new tab, pre-filled</span>
+                    </div>
+                    <svg className="ml-auto text-zinc-300 group-hover:text-[#0D21A5] transition-colors" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  </button>
+
+                  {/* Copy */}
+                  <button
+                    onClick={copyMessage}
+                    className="w-full flex items-center gap-4 bg-white border border-zinc-100 hover:border-[#0D21A5]/30 rounded-xl px-4 py-3.5 transition-colors group cursor-pointer"
+                  >
+                    <span className="h-9 w-9 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    </span>
+                    <div className="text-left">
+                      <span className="block text-xs font-black text-zinc-800">{copied ? "Copied!" : "Copy message"}</span>
+                      <span className="block text-[10px] text-zinc-400 font-semibold">Paste into any email app manually</span>
+                    </div>
+                    {copied && <span className="ml-auto text-[10px] font-black text-[#0D21A5]">✓</span>}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleFormReset}
+                    className="w-full text-[10px] font-black text-zinc-400 hover:text-[#0D21A5] uppercase tracking-widest transition-colors cursor-pointer pt-1"
+                  >
+                    ← Edit message
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -1086,141 +960,70 @@ export default function Page() {
               )}
             </div>
 
-            {/* Right: Business Card Replication (Flat, rounded-2xl, border-only, zero shadow) */}
-            <div className="lg:col-span-6 flex flex-col justify-center">
-              <span className="text-[10px] font-black text-[#D1D067] uppercase tracking-widest mb-4">
-                OFFICIAL BUSINESS CARD
+            {/* Right: Contact Details Panel */}
+            <div className="lg:col-span-6 flex flex-col justify-center gap-6">
+              <span className="text-[10px] font-black text-[#D1D067] uppercase tracking-widest">
+                REACH US DIRECTLY
               </span>
 
-              {/* Physical Business Card Mockup (Replication from Image 1) */}
-              <div className="w-full max-w-[480px] bg-white rounded-2xl border border-[#B9C7E8]/40 self-center flex flex-col justify-between min-h-[290px] p-6 sm:p-8 relative">
-                {/* Gold Stripe separator */}
-                <div className="absolute right-0 bottom-[56px] left-0 h-1.5 bg-[#D1D067] opacity-80" />
-
-                {/* Card Top Side */}
-                <div className="flex flex-col sm:flex-row items-start justify-between gap-6 pb-6">
-                  {/* Left: Logo details */}
-                  <Logo showText={true} />
-
-                  {/* Right: Managing Partner name and position */}
-                  <div className="text-left sm:text-right border-l-4 sm:border-l-0 sm:border-r-4 border-[#D1D067] pl-3 sm:pl-0 sm:pr-3">
-                    <span className="block text-base font-black text-zinc-800 leading-none font-sans">
-                      Elizabeth O. Nwankwo
-                    </span>
-                    <span className="block text-[10px] font-bold text-zinc-400 mt-1.5 uppercase tracking-wider">
-                      Managing Partner
-                    </span>
-                  </div>
-                </div>
-
-                {/* Card Bottom Side */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-end justify-between gap-6 pt-4 relative z-10">
-                  {/* QR Code graphic */}
-                  <div className="flex flex-col items-center justify-center shrink-0 w-20 h-20 bg-white border border-[#B9C7E8]/20 rounded-xl p-1.5 hover:scale-102 transition-transform">
-                    <svg
-                      width="100%"
-                      height="100%"
-                      viewBox="0 0 100 100"
-                      fill="currentColor"
-                      className="text-zinc-800"
-                    >
-                      <rect x="0" y="0" width="28" height="28" />
-                      <rect x="6" y="6" width="16" height="16" fill="white" />
-                      <rect x="10" y="10" width="8" height="8" />
-
-                      <rect x="72" y="0" width="28" height="28" />
-                      <rect x="78" y="6" width="16" height="16" fill="white" />
-                      <rect x="82" y="10" width="8" height="8" />
-
-                      <rect x="0" y="72" width="28" height="28" />
-                      <rect x="6" y="78" width="16" height="16" fill="white" />
-                      <rect x="10" y="82" width="8" height="8" />
-
-                      <rect x="36" y="10" width="8" height="18" />
-                      <rect x="48" y="0" width="12" height="8" />
-                      <rect x="40" y="36" width="20" height="8" />
-                      <rect x="72" y="36" width="16" height="24" />
-                      <rect x="82" y="72" width="18" height="18" />
-                      <rect x="36" y="72" width="28" height="8" />
-                      <rect x="52" y="52" width="12" height="12" />
+              <div className="flex flex-col gap-4">
+                {/* Phone */}
+                <a href="tel:+2347010002333" className="flex items-center gap-4 bg-white rounded-2xl border border-[#B9C7E8]/25 p-5 hover:border-[#0D21A5]/30 transition-colors group">
+                  <span className="h-10 w-10 rounded-xl bg-[#0D21A5]/5 text-[#0D21A5] flex items-center justify-center shrink-0 group-hover:bg-[#0D21A5] group-hover:text-white transition-colors">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.07 12 19.79 19.79 0 0 1 1 3.18 2 2 0 0 1 2.98 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
                     </svg>
-                    <span className="text-[6px] font-black text-zinc-400 uppercase tracking-widest mt-1">
-                      SCAN URL
-                    </span>
+                  </span>
+                  <div>
+                    <span className="block text-[9px] font-black uppercase tracking-widest text-zinc-400 mb-0.5">Phone</span>
+                    <span className="block text-sm font-bold text-zinc-800">+234 701 000 2333</span>
+                    <span className="block text-xs font-semibold text-zinc-400">+234 803 254 8135</span>
                   </div>
+                </a>
 
-                  {/* Contact Info matching card details */}
-                  <div className="flex-1 space-y-2 text-left text-[10px] font-bold text-zinc-500 pl-2">
-                    {/* Phone row */}
-                    <div className="flex items-center gap-2">
-                      <span className="h-4.5 w-4.5 rounded-lg bg-[#0D21A5]/5 text-[#0D21A5] flex items-center justify-center shrink-0">
-                        📞
-                      </span>
-                      <div className="flex flex-col">
-                        <a
-                          href="tel:+2347010002333"
-                          className="hover:text-[#0D21A5] transition-colors"
-                        >
-                          +234 701 000 2333
-                        </a>
-                        <a
-                          href="tel:+2348032548135"
-                          className="hover:text-[#0D21A5] transition-colors"
-                        >
-                          +234 803 254 8135
-                        </a>
-                      </div>
-                    </div>
-
-                    {/* Address row */}
-                    <div className="flex items-center gap-2">
-                      <span className="h-4.5 w-4.5 rounded-lg bg-[#0D21A5]/5 text-[#0D21A5] flex items-center justify-center shrink-0">
-                        📍
-                      </span>
-                      <a
-                        href="https://maps.google.com/?q=No+4,+Carter+Street,+Adekunle,+Yaba,+Lagos+state,+Nigeria"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-[#0D21A5] transition-colors leading-tight"
-                      >
-                        No 4, Carter Street, Adekunle, Yaba
-                      </a>
-                    </div>
-
-                    {/* Email row */}
-                    <div className="flex items-center gap-2">
-                      <span className="h-4.5 w-4.5 rounded-lg bg-[#0D21A5]/5 text-[#0D21A5] flex items-center justify-center shrink-0">
-                        ✉️
-                      </span>
-                      <div className="flex flex-col leading-tight">
-                        <a
-                          href="mailto:info@hfsconsult.us"
-                          className="hover:text-[#0D21A5] transition-colors"
-                        >
-                          info@hfsconsult.us
-                        </a>
-                        <a
-                          href="mailto:hfs0consult@gmail.com"
-                          className="hover:text-[#0D21A5] transition-colors"
-                        >
-                          hfs0consult@gmail.com
-                        </a>
-                      </div>
-                    </div>
+                {/* Email */}
+                <a href="mailto:info@hfsconsult.org?subject=Investment%20Consultation%20Request&body=Hello%20HFS%20Consult%2C%0A%0AName%3A%20%0AEmail%3A%20%0AMessage%3A%20" className="flex items-center gap-4 bg-white rounded-2xl border border-[#B9C7E8]/25 p-5 hover:border-[#0D21A5]/30 transition-colors group">
+                  <span className="h-10 w-10 rounded-xl bg-[#0D21A5]/5 text-[#0D21A5] flex items-center justify-center shrink-0 group-hover:bg-[#0D21A5] group-hover:text-white transition-colors">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                      <polyline points="22,6 12,13 2,6" />
+                    </svg>
+                  </span>
+                  <div>
+                    <span className="block text-[9px] font-black uppercase tracking-widest text-zinc-400 mb-0.5">Email</span>
+                    <span className="block text-sm font-bold text-zinc-800">info@hfsconsult.org</span>
+                    <span className="block text-xs font-semibold text-zinc-400">hfs0consult@gmail.com</span>
                   </div>
-                </div>
+                </a>
 
-                {/* Bottom URL Strip */}
-                <div className="absolute right-0 bottom-0 left-0 h-[44px] bg-[#D1D067]/15 flex items-center justify-center px-4">
-                  <a
-                    href="https://hfsconsult.us"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[10px] font-black text-zinc-800 tracking-wider hover:text-[#0D21A5] transition-colors"
-                  >
-                    🌐 https://hfsconsult.us
-                  </a>
-                </div>
+                {/* WhatsApp */}
+                <a href="https://wa.me/2347010002333" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-white rounded-2xl border border-[#B9C7E8]/25 p-5 hover:border-[#0D21A5]/30 transition-colors group">
+                  <span className="h-10 w-10 rounded-xl bg-[#0D21A5]/5 text-[#0D21A5] flex items-center justify-center shrink-0 group-hover:bg-[#0D21A5] group-hover:text-white transition-colors">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                    </svg>
+                  </span>
+                  <div>
+                    <span className="block text-[9px] font-black uppercase tracking-widest text-zinc-400 mb-0.5">WhatsApp</span>
+                    <span className="block text-sm font-bold text-zinc-800">Message Us on WhatsApp</span>
+                    <span className="block text-xs font-semibold text-zinc-400">Typically responds within hours</span>
+                  </div>
+                </a>
+
+                {/* Address */}
+                <a href="https://maps.google.com/?q=No+4,+Carter+Street,+Adekunle,+Yaba,+Lagos,+Nigeria" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-white rounded-2xl border border-[#B9C7E8]/25 p-5 hover:border-[#0D21A5]/30 transition-colors group">
+                  <span className="h-10 w-10 rounded-xl bg-[#0D21A5]/5 text-[#0D21A5] flex items-center justify-center shrink-0 group-hover:bg-[#0D21A5] group-hover:text-white transition-colors">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                  </span>
+                  <div>
+                    <span className="block text-[9px] font-black uppercase tracking-widest text-zinc-400 mb-0.5">Office Address</span>
+                    <span className="block text-sm font-bold text-zinc-800">No 4, Carter Street, Adekunle</span>
+                    <span className="block text-xs font-semibold text-zinc-400">Yaba, Lagos State, Nigeria</span>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
@@ -1230,22 +1033,14 @@ export default function Page() {
       {/* ── FOOTER ── */}
       <footer className="w-full bg-white border-t border-[#B9C7E8]/20 py-8">
         <div className="max-w-6xl mx-auto px-6 md:px-10 flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <Image
-              src="/logo.jpeg"
-              alt="HFS Consult Logo"
-              width={150}
-              height={150}
-              className="rounded-md object-contain"
+              src="/logo.png"
+              alt="HFS Consult"
+              width={120}
+              height={52}
+              className="object-contain"
             />
-            {/* <div className="text-left leading-tight">
-              <span className="block text-[11px] font-black text-[#0D21A5] tracking-tight uppercase">
-                HFS Consult Limited
-              </span>
-              <span className="block text-[8px] font-black text-zinc-400 uppercase tracking-widest">
-                Investing with Clarity & Confidence.
-              </span>
-            </div> */}
           </div>
 
           <span className="text-[10px] font-bold text-zinc-400">
